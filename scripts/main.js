@@ -7,8 +7,6 @@
 
   const PARTICLE_NUM = 5000;
   const RADIUS = Math.PI * 2;
-  const CANVASWIDTH = 1500;
-  const CANVASHEIGHT = 150;
   const CANVASID = "canvas";
 
   let texts = [
@@ -55,8 +53,30 @@
     textIndex = 0,
     textSize = 50;
 
+  function setDimensions() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    canvas.style.position = "absolute";
+    canvas.style.left = "0%";
+    canvas.style.top = "0%";
+    canvas.style.bottom = "0%";
+    canvas.style.right = "0%";
+    canvas.style.marginTop = window.innerHeight * 0.1 + "px"; // Sesuaikan margin
+  }
+
+  function adjustTextSize() {
+    // Menyesuaikan ukuran teks berdasarkan ukuran layar
+    if (window.innerWidth < 600) {
+      textSize = 30; // Ukuran lebih kecil di layar kecil
+    } else {
+      textSize = 50; // Ukuran teks standar
+    }
+  }
+
   function draw() {
-    ctx.clearRect(0, 0, CANVASWIDTH, CANVASHEIGHT);
+    adjustTextSize(); // Menyesuaikan ukuran teks setiap frame
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = "rgb(255, 255, 255)";
     ctx.textBaseline = "middle";
     ctx.fontWeight = "bold";
@@ -65,13 +85,13 @@
       "px 'SimHei', 'Avenir', 'Helvetica Neue', 'Arial', 'sans-serif'";
     ctx.fillText(
       text,
-      (CANVASWIDTH - ctx.measureText(text).width) * 0.5,
-      CANVASHEIGHT * 0.5
+      (canvas.width - ctx.measureText(text).width) * 0.5,
+      canvas.height * 0.5
     );
 
-    let imgData = ctx.getImageData(0, 0, CANVASWIDTH, CANVASHEIGHT);
+    let imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
 
-    ctx.clearRect(0, 0, CANVASWIDTH, CANVASHEIGHT);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     for (let i = 0, l = particles.length; i < l; i++) {
       let p = particles[i];
@@ -84,9 +104,9 @@
 
   function particleText(imgData) {
     var pxls = [];
-    for (var w = CANVASWIDTH; w > 0; w -= 3) {
-      for (var h = 0; h < CANVASHEIGHT; h += 3) {
-        var index = (w + h * CANVASWIDTH) * 4;
+    for (var w = canvas.width; w > 0; w -= 3) {
+      for (var h = 0; h < canvas.height; h += 3) {
+        var index = (w + h * canvas.width) * 4;
         if (imgData.data[index] > 1) {
           pxls.push([w, h]);
         }
@@ -143,17 +163,6 @@
         p.draw(ctx);
       }
     }
-  }
-
-  function setDimensions() {
-    canvas.width = CANVASWIDTH;
-    canvas.height = CANVASHEIGHT;
-    canvas.style.position = "absolute";
-    canvas.style.left = "0%";
-    canvas.style.top = "0%";
-    canvas.style.bottom = "0%";
-    canvas.style.right = "0%";
-    canvas.style.marginTop = window.innerHeight * 0.15 + "px";
   }
 
   function event() {
@@ -263,7 +272,5 @@
     $("#iframeAudio").remove();
   }
 
-  // setTimeout(() => {
   init();
-  // }, 4000);
 })(window);
