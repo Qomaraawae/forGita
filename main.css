@@ -63,8 +63,9 @@ body {
 }
 
 .flowers {
-  position: relative;
-  transform: scale(0.9);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .flower {
@@ -1552,4 +1553,51 @@ body {
 .container * {
   -webkit-animation-play-state: paused !important;
   animation-play-state: paused !important;
+}
+
+/* Untuk layar kecil seperti HP */
+@media (max-width: 768px) {
+  .container {
+    padding: 10px;
+  }
+
+  .flowers {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .flower {
+    transform: scale(0.8); /* Mengecilkan bunga agar lebih pas di layar kecil */
+    margin-bottom: 10px;
+  }
+
+  .flower__line,
+  .flower__grass {
+    width: 80%;
+  }
+
+  .long-g {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .grow-ans {
+    --d: 1.5s;
+  }
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+.flower__white-circle {
+  width: 10vw; /* Menggunakan unit viewport agar proporsional */
+  height: 10vw;
+}
+
+.flower__leaf {
+  max-width: 90%;
 }
