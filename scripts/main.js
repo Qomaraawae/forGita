@@ -83,11 +83,13 @@
     ctx.font =
       textSize +
       "px 'SimHei', 'Avenir', 'Helvetica Neue', 'Arial', 'sans-serif'";
-    ctx.fillText(
-      text,
-      (canvas.width - ctx.measureText(text).width) * 0.5,
-      canvas.height * 0.5
-    );
+
+    // Cek apakah teks dapat ditampilkan dengan baik
+    const textWidth = ctx.measureText(text).width;
+    const xPos = (canvas.width - textWidth) / 2; // Memastikan teks berada di tengah horizontal
+    const yPos = canvas.height * 0.5; // Memastikan teks berada di tengah vertikal
+
+    ctx.fillText(text, xPos, yPos);
 
     let imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
 
@@ -264,12 +266,6 @@
       ctx.closePath();
       ctx.fill();
     }
-  }
-
-  var isChrome =
-    /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
-  if (!isChrome) {
-    $("#iframeAudio").remove();
   }
 
   init();
