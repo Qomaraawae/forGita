@@ -5,8 +5,11 @@
     window.webkitRequestAnimationFrame ||
     window.msRequestAnimationFrame;
 
+  const FRAME_RATE = 50;
   const PARTICLE_NUM = 5000;
   const RADIUS = Math.PI * 2;
+  const CANVASWIDTH = 1500;
+  const CANVASHEIGHT = 150;
   const CANVASID = "canvas";
 
   let texts = [
@@ -15,32 +18,24 @@
     "PAKAI LANDSCAPE MODE",
     "BTW",
     "COBA LIHAT DEH",
-    "KATA INI",
-    "SEPERTINYA ADA YANG ANEH",
+    "TEKS NTA INI",
+    "KAYAK ADA YANG ANEH",
     "AYO PENCET LAGI",
     "AKU GA BOHONG KOK",
     "PENCET LAGI",
-    "AKU TAHU KAMU PASTI KESAL",
+    "CAPEK KAN WKWKWK",
     "TAPI INI BENER ADA YANG ANEH",
     "AKU JANJI",
     "INI TERAKHIR KALI",
     "PENCET LAGI",
     "AYO SEMANGAT",
     "KAMU PASTI BISA",
-    "IHHH KAMU KURANG PENCET ITU",
-    "AYO DONG",
-    "IYA INI BENER TERAKHIR KOK",
+    "SEMANGAAATTTT",
     "YASUDAH DEH",
     "JADI",
     "SEBENERNYA",
-    "AKU",
-    "SUKA",
-    "SAMA",
-    "KAMU",
-    "DARI",
-    "SEMESTER",
-    "SATU",
-    "HEHEHE...",
+    "AKU SUKA KAMU",
+    "HEHE",
     "MAAF YA",
     "BARU BILANG SEKARANG",
   ];
@@ -53,47 +48,23 @@
     textIndex = 0,
     textSize = 50;
 
-  function setDimensions() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    canvas.style.position = "absolute";
-    canvas.style.left = "0%";
-    canvas.style.top = "0%";
-    canvas.style.bottom = "0%";
-    canvas.style.right = "0%";
-    canvas.style.marginTop = window.innerHeight * 0.1 + "px"; // Sesuaikan margin
-  }
-
-  function adjustTextSize() {
-    // Menyesuaikan ukuran teks berdasarkan ukuran layar
-    if (window.innerWidth < 600) {
-      textSize = 30; // Ukuran lebih kecil di layar kecil
-    } else {
-      textSize = 50; // Ukuran teks standar
-    }
-  }
-
   function draw() {
-    adjustTextSize(); // Menyesuaikan ukuran teks setiap frame
-
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(0, 0, CANVASWIDTH, CANVASHEIGHT);
     ctx.fillStyle = "rgb(255, 255, 255)";
     ctx.textBaseline = "middle";
     ctx.fontWeight = "bold";
     ctx.font =
       textSize +
       "px 'SimHei', 'Avenir', 'Helvetica Neue', 'Arial', 'sans-serif'";
+    ctx.fillText(
+      text,
+      (CANVASWIDTH - ctx.measureText(text).width) * 0.5,
+      CANVASHEIGHT * 0.5
+    );
 
-    // Cek apakah teks dapat ditampilkan dengan baik
-    const textWidth = ctx.measureText(text).width;
-    const xPos = (canvas.width - textWidth) / 2; // Memastikan teks berada di tengah horizontal
-    const yPos = canvas.height * 0.5; // Memastikan teks berada di tengah vertikal
+    let imgData = ctx.getImageData(0, 0, CANVASWIDTH, CANVASHEIGHT);
 
-    ctx.fillText(text, xPos, yPos);
-
-    let imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(0, 0, CANVASWIDTH, CANVASHEIGHT);
 
     for (let i = 0, l = particles.length; i < l; i++) {
       let p = particles[i];
@@ -106,9 +77,9 @@
 
   function particleText(imgData) {
     var pxls = [];
-    for (var w = canvas.width; w > 0; w -= 3) {
-      for (var h = 0; h < canvas.height; h += 3) {
-        var index = (w + h * canvas.width) * 4;
+    for (var w = CANVASWIDTH; w > 0; w -= 3) {
+      for (var h = 0; h < CANVASHEIGHT; h += 3) {
+        var index = (w + h * CANVASWIDTH) * 4;
         if (imgData.data[index] > 1) {
           pxls.push([w, h]);
         }
@@ -165,6 +136,17 @@
         p.draw(ctx);
       }
     }
+  }
+
+  function setDimensions() {
+    canvas.width = CANVASWIDTH;
+    canvas.height = CANVASHEIGHT;
+    canvas.style.position = "absolute";
+    canvas.style.left = "0%";
+    canvas.style.top = "0%";
+    canvas.style.bottom = "0%";
+    canvas.style.right = "0%";
+    canvas.style.marginTop = window.innerHeight * 0.15 + "px";
   }
 
   function event() {
@@ -268,5 +250,13 @@
     }
   }
 
+  var isChrome =
+    /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+  if (!isChrome) {
+    $("#iframeAudio").remove();
+  }
+
+  // setTimeout(() => {
   init();
+  // }, 4000);
 })(window);
